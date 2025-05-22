@@ -4,7 +4,9 @@ This script is an introduction to basic cryptography concepts, focusing on Ferne
 
 ## Fernet
 **Fernet** is a symmetric encryption method that uses a **32-byte key** (256 bits). This key is typically shown as a Base64 string for convenience, but under the hood it is raw binary data. Fernet provides both encryption and decryption, ensuring the authenticity and confidentiality of the data it protects.
+
 Example: `AvcDrS0nkeK2rHi1PsdowPdNWIPkcdA1qbGv3ozkUIM=`
+
 If you're curious about the equals sign at the end, it isn't part of the core key material itself but is a necessary component of the base64 encoding standard to ensure proper decoding.
 
 ## Base64
