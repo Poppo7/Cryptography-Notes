@@ -4,7 +4,7 @@ import os
 # --- IMPORTANT: Paste YOUR SINGLE, SAVED FERNET KEY here ---
 # This is the key you generated ONCE and saved securely.
 # It should look like 'b'...' (e.g., b'YOUR_GENERATED_SECRET_KEY_HERE=')
-my_fernet_key_string = b'M6SblgjULBDx8uFcM3YLi0s47CE0pKG2uvsTJIw-O6c=' # <<< PASTE YOUR SAVED FERNET KEY HERE!
+my_fernet_key_string = b'YOUR_GENERATED_SECRET_KEY_HERE=' # <<< PASTE YOUR SAVED FERNET KEY HERE!
 
 try:
     cipher_suite = Fernet(my_fernet_key_string)
