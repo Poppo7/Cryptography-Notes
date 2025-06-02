@@ -4,7 +4,7 @@ import os
 # --- IMPORTANT: Paste YOUR SINGLE, SAVED FERNET KEY here ---
 # This is the key you generated ONCE and saved securely.
 # It should look like 'b'...' (e.g., b'YOUR_GENERATED_SECRET_KEY_HERE=')
-my_fernet_key_string = b'YOUR_ACTUAL_GENERATED_FERNET_KEY_HERE=' # <<< PASTE YOUR SAVED FERNET KEY HERE!
+my_fernet_key_string = b'M6SblgjULBDx8uFcM3YLi0s47CE0pKG2uvsTJIw-O6c=' # <<< PASTE YOUR SAVED FERNET KEY HERE!
 
 try:
     cipher_suite = Fernet(my_fernet_key_string)
@@ -13,33 +13,57 @@ except ValueError:
     exit()
 
 # --- Input Directory and Output Directory ---
-# This script will ask you for the path to the folder containing .txt files.
-# It will create a new subfolder named 'encrypted_file' inside that input directory
+# This script will ask you for the path to the folder containing your files.
+# It will create a new subfolder named 'encrypted_files' inside that input directory
 # to save the encrypted files.
-input_dir = input("Enter the FULL path to the directory containing your .txt files (e.g., C:\\Users\\YourName\\Documents\\Subfolder): ")
+input_dir = input("Enter the FULL path to the directory containing your files (e.g., C:\\Users\\YourName\\Documents\\Subfolder): ")
 
 if not os.path.isdir(input_dir):
     print(f"Error: Directory not found at {input_dir}. Please check the path and try again.")
     exit()
 
-output_dir = os.path.join(input_dir, "encrypted_file")
+output_dir = os.path.join(input_dir, "encrypted_files") # Changed subfolder name for clarity
 os.makedirs(output_dir, exist_ok=True) # Create output directory if it doesn't exist
+
+# --- File Extensions to Encrypt ---
+# You can add or remove file extensions from this list.
+# Ensure to include the leading dot (e.g., '.txt', '.pdf').
+# This list now includes common document, image, audio, video, and archive formats.
+FILE_EXTENSIONS_TO_ENCRYPT = [
+    # Documents
+    ".txt", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".odt", ".ods", ".odp",
+    # Images
+    ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".svg", ".webp",
+    # Audio
+    ".mp3", ".wav", ".aac", ".flac", ".ogg", ".wma",
+    # Video
+    ".mp4", ".mov", ".avi", ".mkv", ".wmv", ".flv", ".webm",
+    # Archives/Compressed
+    ".zip", ".rar", ".7z", ".tar", ".gz", ".bz2",
+    # Other common formats (e.g., code, data)
+    ".csv", ".json", ".xml", ".html", ".css", ".js", ".py", ".c", ".cpp", ".java", ".exe", ".dll", ".iso"
+]
 
 print(f"\nProcessing files in: {input_dir}")
 print(f"Encrypted files will be saved in: {output_dir}\n")
+print(f"Looking for files with extensions: {', '.join(FILE_EXTENSIONS_TO_ENCRYPT)}\n")
 
 processed_count = 0
 for filename in os.listdir(input_dir):
-    # Only process .txt files for encryption
-    if filename.endswith(".txt"):
+    # Get the file extension
+    file_extension = os.path.splitext(filename)[1].lower() # .lower() to handle .TXT, .Pdf etc.
+
+    # Only process files with the specified extensions for encryption
+    if file_extension in FILE_EXTENSIONS_TO_ENCRYPT:
         input_filepath = os.path.join(input_dir, filename)
-        # Create a unique output filename by adding .fernet extension
-        output_filename = filename.replace(".txt", ".00")
+        # Create a unique output filename by adding a custom extension (e.g., .fernet_enc)
+        # It's good practice to use a distinct extension for encrypted files.
+        output_filename = filename + ".fernet_enc"
         output_filepath = os.path.join(output_dir, output_filename)
 
         try:
             # Read the original data from the file
-            with open(input_filepath, 'rb') as f_in: # 'rb' for reading bytes (even if it's text, it's safer)
+            with open(input_filepath, 'rb') as f_in: # 'rb' for reading bytes (essential for all file types)
                 original_data = f_in.read()
 
             # Encrypt the data
@@ -56,8 +80,8 @@ for filename in os.listdir(input_dir):
             print(f"    Skipping this file.")
 
 if processed_count == 0:
-    print("\nNo .txt files found or processed in the specified directory.")
+    print("\nNo files with the specified extensions found or processed in the specified directory.")
 else:
     print(f"\n--- Encryption process completed for {processed_count} file(s). ---")
-    print("All encrypted files are in the subfolder: '{output_dir}'")
+    print(f"All encrypted files are in the subfolder: '{output_dir}'")
     print("Remember to keep your Fernet key *extremely* secure and separate from these encrypted files!")
